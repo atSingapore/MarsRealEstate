@@ -18,19 +18,24 @@ package com.example.android.marsrealestate.detail
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.detail.DetailFragment
 import com.example.android.marsrealestate.network.MarsProperty
+
 
 /**
  * The [ViewModel] that is associated with the [DetailFragment].
  */
 class DetailViewModel(marsProperty: MarsProperty, app: Application) : AndroidViewModel(app) {
 
+    // Need to expose the marsProperty to the view
     val _selectedProperty = MutableLiveData<MarsProperty>()
-
     val selectedProperty: LiveData<MarsProperty>
     get() = _selectedProperty
 
+    init {
+        _selectedProperty.value = marsProperty
+    }
 
     // Transformation map (displayPropertyPrice) converts selectedProperty's price to a displayable string
     val displayPropertyPrice = Transformations.map(selectedProperty) {
@@ -38,6 +43,8 @@ class DetailViewModel(marsProperty: MarsProperty, app: Application) : AndroidVie
                 when (it.isRental) {
                     true -> R.string.display_price_monthly_rental
                     false -> R.string.display_price
+
+
                 }, it.price)
     }
 
@@ -49,5 +56,26 @@ class DetailViewModel(marsProperty: MarsProperty, app: Application) : AndroidVie
                             false -> R.string.type_sale
                         }))
     }
+
+//    // The displayPropertyPrice formatted Transformation Map LiveData, which displays the sale
+//    // or rental price.
+//    val displayPropertyPrice = Transformations.map(selectedProperty) {
+//        app.applicationContext.getString(
+//                when (it.isRental) {
+//                    true -> R.string.display_price_monthly_rental
+//                    false -> R.string.display_price
+//                }, it.price)
+//    }
+//
+//    // The displayPropertyType formatted Transformation Map LiveData, which displays the
+//    // "For Rent/Sale" String
+//    val displayPropertyType = Transformations.map(selectedProperty) {
+//        app.applicationContext.getString(R.string.display_type,
+//                app.applicationContext.getString(
+//                        when(it.isRental) {
+//                            true -> R.string.type_rent
+//                            false -> R.string.type_sale
+//                        }))
+//    }
 
 }

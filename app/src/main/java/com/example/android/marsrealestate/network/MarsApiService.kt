@@ -25,6 +25,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
+
+// defines constants to match the query values our web service expects:
+enum class MarsApiFilter(val value: String) { SHOW_RENT("rent"), SHOW_BUY("buy"), SHOW_ALL("all") }
 
 private const val BASE_URL = "https://mars.udacity.com/"
 
@@ -48,7 +52,8 @@ interface  MarsApiService {
     // Annotate with @GET and specify endpoint for JSON real estate response
     @GET("realestate")
     // Method to request the JSON Response string
-    suspend fun getProperties(): //Response<String>
+    // Added a query filter parameter so that we can filter properties based on the MarsApiFilter enum values
+    suspend fun getProperties(@Query("filter") type: String): //Response<String>
             // Create the retrofit call object that will start the HTTP request
             //Call<List<MarsProperty>>
             List<MarsProperty>
